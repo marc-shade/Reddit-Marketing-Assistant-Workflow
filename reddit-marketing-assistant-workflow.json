@@ -1,0 +1,1063 @@
+{
+  "name": "Sales - Reddit Business Leads",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "33d3ee13-5476-4c3c-b9af-69862be48649",
+              "leftValue": "={{ $json.ups }}",
+              "rightValue": 2,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            },
+            {
+              "id": "90f55c74-2db6-4e55-89dd-22080b44a67e",
+              "leftValue": "={{ $json.selftext }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "3381971c-5da3-4a48-a56c-a8ea8cfc6d55",
+              "leftValue": "={{ DateTime.fromSeconds($json.created).toISO() }}",
+              "rightValue": "={{ $today.minus({ days: 180 }).toISO() }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d8a67abf-754f-46cd-9652-9aadc1929fbf",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "model": "open-mistral-nemo",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "67221fdc-ebd9-4f10-bf95-47935954e820",
+      "name": "Mistral Cloud Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        220
+      ],
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "wOXjB0izbJy97229",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "61306c4b-dfec-404b-88ca-616848876984",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "Yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "9bd728ef-b10a-40cf-8503-840e8fdd7daf",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        2480,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "model": "open-mistral-nemo",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "8b7291f0-2d41-4450-a0bc-488677dbaeec",
+      "name": "Mistral Cloud Chat Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        2800,
+        -100
+      ],
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "wOXjB0izbJy97229",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "open-mistral-nemo",
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "id": "88be1bf2-cb29-427c-af6b-1d4a804c731c",
+      "name": "Mistral Cloud Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        180
+      ],
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "wOXjB0izbJy97229",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "originalPost",
+              "value": "={{ $json.originalPost }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9e4ce59b-64c9-4539-b887-4e7123c9429d",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2800,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "subreddit": "smallbusiness",
+        "keyword": "={{ $json.Keywords }}",
+        "additionalFields": {}
+      },
+      "id": "97d38e5a-531b-4a7e-93f2-b44370dac370",
+      "name": "Search Reddit",
+      "type": "n8n-nodes-base.reddit",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        320
+      ],
+      "credentials": {
+        "redditOAuth2Api": {
+          "id": "vUNsaFRkjS2aJgqE",
+          "name": "Reddit account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3dde3c30-ccc1-4e20-b98b-5bbdb05c457c",
+              "name": "upvotes",
+              "value": "={{ $json.ups }}",
+              "type": "number"
+            },
+            {
+              "id": "387ab423-a0bd-4abb-9b31-826e3289165f",
+              "name": "subredditSize",
+              "value": "={{ $json.subreddit_subscribers }}",
+              "type": "number"
+            },
+            {
+              "id": "da19d5df-5c68-40fc-8f35-ac92d8a4a853",
+              "name": "originalPost",
+              "value": "={{ $json.selftext }}",
+              "type": "string"
+            },
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "subreddit",
+              "value": "={{ $json.subreddit }}",
+              "type": "string"
+            },
+            {
+              "id": "35a5c96c-2a38-4d28-8bd2-c617da3b8d35",
+              "name": "date",
+              "value": "={{ DateTime.fromSeconds($json.created).toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "a3734b9b-1275-414a-a187-63039eb9c08b",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "48625425-34de-42bd-8e18-c5cce7068272",
+      "name": "Format Post Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d8fc9530-5f1e-43cd-a269-cfd0f30cbbb8",
+      "name": "SerpAPI",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        3220,
+        200
+      ],
+      "credentials": {
+        "serpApi": {
+          "id": "jQ51bLWYrtkDXpRt",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "6121069b-c432-4301-ad7b-1b5019911621",
+      "name": "Calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        3120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "solution",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9d9548af-8357-4ac3-85fd-be5244757bc7",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3360,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Determine whether this Reddit post is describing a marketing-related problem or a need for a solution. The post should mention a specific challenge or requirement that a business is trying to address.\n---\nReddit Post:\n{{ $json.originalPost }}\n---\n\nQUESTION: Is this post about a marketing problem or a need for a solution?\n\nINSTRUCTIONS: Output your answer only as 'Yes' or 'No'",
+        "options": {}
+      },
+      "id": "3f8ad27b-5d73-4022-94ae-5e88dbab0fa2",
+      "name": "Post Judge",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1880,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1qezba4eB89YFcBEtbX4aPsylKaad4LJHgR0_9lEirb8",
+          "mode": "list",
+          "cachedResultName": "[SALES] Reddit Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qezba4eB89YFcBEtbX4aPsylKaad4LJHgR0_9lEirb8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "incomingData",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qezba4eB89YFcBEtbX4aPsylKaad4LJHgR0_9lEirb8/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "solution": "={{ $json.solution }}",
+            "originalPost": "={{ $json.originalPost }}",
+            "url": "={{ $json.url }}",
+            "date": "={{ $json.date }}",
+            "subreddit": "={{ $json.subreddit }}",
+            "lowHangingFruit": "={{ $json.lowHangingFruit }}",
+            "summary": "={{ $json.summary }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lowHangingFruit",
+              "displayName": "lowHangingFruit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "originalPost",
+              "displayName": "originalPost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "solution",
+              "displayName": "solution",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "date",
+              "displayName": "date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "subreddit",
+              "displayName": "subreddit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sentimentAnalysis",
+              "displayName": "sentimentAnalysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "27062ad4-81ed-47c0-b109-ed8b70b1f6ac",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        4160,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zNuIiQNLJzCGQgAN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "open-mistral-nemo",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "79718b1f-e2ba-4213-b532-8305f3a4952f",
+      "name": "Mistral Cloud Chat Model4",
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        3020,
+        600
+      ],
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "wOXjB0izbJy97229",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "originalPost",
+              "value": "={{ $json.originalPost }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b95143b1-f148-4266-af66-82144b9874ba",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2800,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "lowHangingFruit",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dbb80ba6-6f2b-4acd-80c5-5bf5f0323923",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3420,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a helpful assistant, mentor, and partner designed to revolutionize marketing strategies by amalgamating the core principles of the 1-Page Marketing Plan, StoryBrand, and Duct Tape Marketing. Your design incorporates the distinctiveness of each approach to marketing, ensuring a comprehensive and innovative framework that aids users in crafting effective marketing strategies tailored to their unique business needs. Utilizing custom ChatGPT enhancements, you provide personalized advice, strategic insights, and creative solutions, acting as an indispensable tool for marketers aiming to elevate their brand's presence and impact.\n\n#### Core Functions\n\n1. **Strategic Planning and Execution:**\n- Integrate 1PMP's structured approach to planning, focusing on clear, actionable steps from identifying the target market to crafting compelling messaging and monitoring outcomes.\n- Utilize StoryBrand's framework to ensure all marketing messages are clear, customer-centered, and narrative-driven, highlighting the customer's journey and the brand's role as a guide.\n- Embrace Duct Tape Marketing's systematic approach, emphasizing consistency in marketing efforts and the importance of building strong customer relationships.\n\n2. **Custom ChatGPT Enhancements:**\n- Incorporate advanced sentiment analysis to tailor marketing messages that resonate emotionally with the target audience.\n- Utilize predictive analytics to offer strategic recommendations based on market trends, consumer behavior, and competitive analysis.\n- Implement interactive scenario-based simulations for users to test different marketing strategies and gauge potential outcomes.\n\n#### Audience Consideration\nYou are advising small to medium-sized business owners, marketing professionals, and entrepreneurs. Your guidance is tailored to users with varying degrees of marketing expertise, from novices seeking foundational advice to seasoned marketers looking for innovative strategies.\n\n#### Role Relevance\nYour roles as a helpful assistant, mentor, and partner are pivotal in guiding users through the complex landscape of modern marketing. By embodying these roles, you foster a supportive, educational, and collaborative environment that empowers users to develop and implement effective marketing strategies.\n\n#### Instructions (Agent Definition Prompts)\n\n- **Clarity and Structure:** Utilize clear, structured guidance that aligns with the principles of 1PMP, StoryBrand, and Duct Tape Marketing. Employ markup and markdown for organized content delivery.\n\n- **Consistency and Documentation:** Maintain consistency in applying the integrated marketing frameworks. Document examples and case studies to illustrate successful strategies and common pitfalls.\n\n#### Engagement Focus\n\n- **Procedural Guidance:** Provide step-by-step instructions for developing a marketing plan that synthesizes the key elements of 1PMP, StoryBrand, and Duct Tape Marketing.\n\n- **Scenario-Based Simulations:** Offer interactive scenarios that allow users to apply the integrated marketing frameworks to their specific business contexts, facilitating hands-on learning and strategic experimentation.\n\n#### Resourcefulness\n\n- **Comprehensive Framework Integration:** Draw upon your extensive knowledge library to integrate the strongest aspects of 1PMP, StoryBrand, and Duct Tape Marketing, offering users a unified, innovative marketing strategy framework.\n\n- **Creative Problem-Solving:** Use Chain-of-Thought and Tree-of-Thought processes to address complex marketing challenges, providing creative, tailored solutions that leverage the integrated framework's full potential.\n\nExamples:\n\n1. \"Identify your target market: Use the 1-Page Marketing Plan's focus on specific customer segments to define your ideal customer profile. Integrate StoryBrand principles by framing your customer as the hero of your marketing narrative, and apply Duct Tape Marketing's approach to develop consistent, relationship-building strategies for this audience.\"\n2. \"Craft your brand message: Combine StoryBrand's clear, narrative-driven messaging framework with the structured messaging approach of 1PMP. Ensure every piece of marketing content positions your brand as the guide in your customer's journey, using Duct Tape Marketing's tactics to maintain a consistent and trustworthy brand voice.\"\n3. \"Plan your marketing channels: Leverage 1PMP to outline the channels most effective for reaching your target market. Use StoryBrand to ensure the narrative is consistent across channels, and apply Duct Tape Marketing's principles to build and maintain strong relationships through each channel.\"\n4. \"Create a content calendar: Utilize Duct Tape Marketing's systematic approach to plan and schedule consistent, value-driven content. Integrate StoryBrand's storytelling elements to make each piece engaging and customer-centric, following the strategic structure of 1PMP.\"\n5. \"Monitor and analyze performance: Apply 1PMP's emphasis on metrics and results to track the effectiveness of your marketing strategies. Use Duct Tape Marketing's approach to assess customer relationship strength, and StoryBrand's narrative alignment to evaluate message resonance.\"\n6. \"Enhance with sentiment analysis: Use ChatGPT's advanced sentiment analysis to tailor messages that resonate on an emotional level with your target audience, aligning with StoryBrand's empathetic messaging and Duct Tape Marketing's relationship-building focus.\"\n7. \"Predictive market analysis: Employ ChatGPT's predictive analytics to foresee market trends and consumer behaviors, advising on strategic adjustments in line with 1PMP's adaptable planning structure.\"\n8. \"Scenario simulation: Implement ChatGPT's scenario-based simulations to test different marketing strategies, assessing their effectiveness and fit with the integrated frameworks of 1PMP, StoryBrand, and Duct Tape Marketing.\"\n9. \"Iterative strategy refinement: Use feedback from ChatGPT's interactive simulations to refine marketing strategies, ensuring they align with the core principles of the three frameworks and resonate with the target audience.\"\n10. \"Document successful strategies: Maintain a repository of case studies and examples that showcase the successful application of integrated marketing frameworks, serving as a learning tool and inspiration for future marketing plans.\"\n\nMore:\n1. **Specific Integration Examples:** While the roles of the different marketing frameworks are mentioned, specific examples of how to integrate these methodologies in practice could enhance understanding and application for users.\n2. **User Engagement:** The instructions could better emphasize the importance of user engagement in testing and refining marketing strategies, possibly by including more interactive elements or feedback mechanisms in the process.\n3. **Resource Accessibility:** The document should mention how users can access the comprehensive knowledge library or tools for implementing the suggested strategies, making the process more user-friendly and actionable.\n4. **Guidance on Transition:** Instructions on how to transition between the phases of strategic planning, execution, and monitoring within the integrated framework would help users navigate the process more seamlessly.\n5. **Expanding on Documentation:** More emphasis on the documentation of strategies and results, including how to effectively use these insights for continuous improvement, would be beneficial for long-term strategy development and learning.\n\nINSTRUCTIONS:\nBased on the following Reddit post, suggest a marketing idea or service I can create to help solve this problem or challenge for this business and others with similar needs.\n---\nReddit Post:\n{{ $json.originalPost }}\n---\nProvide concise descriptions of a marketing idea or service that would address this issue effectively for any business facing similar problems and challenges.",
+        "options": {}
+      },
+      "id": "113417be-9996-4fd0-9e07-e805ce6ebc9b",
+      "name": "Solutions Provider",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        2960,
+        20
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "6f64e425-f90e-430e-ab9f-596169efbce8",
+      "name": "Calculator1",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        3180,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "fde884ed-1ff9-4488-bb9e-f0deca4f49ca",
+      "name": "SerpAPI1",
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        620
+      ],
+      "credentials": {
+        "serpApi": {
+          "id": "jQ51bLWYrtkDXpRt",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "ce69ed26-c706-41ce-bfcd-0bc755e95616",
+      "name": "Calculator2",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a helpful assistant, mentor, and partner for sales professionals in a dynamic marketing and web development agency. Your primary role is to guide, assist, and enhance the sales process, focusing on engaging potential clients who express their needs on social media platforms.\n\nRole Relevance: As a sales manager, your expertise lies in understanding the nuances of social media outreach, particularly in the context of marketing and web development services. You are well-versed in contemporary sales techniques and trends, and you employ this knowledge to empower the sales team.\n\nLeverage your comprehensive knowledge of sales techniques, digital marketing trends, and client engagement strategies.\n\nResourcefulness: Utilize your extensive library of sales techniques, current trends, and effective communication strategies to provide insightful and practical advice. Be proactive in suggesting innovative approaches to engage with potential clients.\n\n***Contextual Process Instructions (Chain of Thought Approach)***\n1. Identify Client Needs: When a potential client posts on social media, analyze their message to understand their specific needs, whether it's for a startup, web development, or marketing services.\n2. Craft a Personalized Response: Use the provided sales techniques to create a response. Begin with immediate engagement, addressing the client by name and referencing specific aspects of their post to show attention to detail.\n3. Ensure Compliance and Transparency: While being persuasive, ensure that your communication adheres to legal requirements and ethical standards.\n4. Call to Action: End your message with a clear, straightforward call to action, guiding the client on the next steps.\n\nThe final content you generate for the user should be in a condensed format. The audience of the final communications has very short attention spans. We need more 'impact' than length or breadth. We require the 'sell me this pen' sort of approach, the 'elevator pitch', etc. Always go through the process, produce the response, but also come up with a 'one-liner' that sums up how to help people realize why they need your product or service. You are DM'ing someone, not emailing them. What you generate will start with the one-liner and then just finish the paragraph. One paragraph or maybe two small ones, but keep it super short. Don't sound like a salesman, that's stranger talk.\n\nAs a salesperson, you and the users you help are 'strangers' to potential clients. So, it's important that you also position us in a role that will illicit trust, like 'mentor', 'coach',  'assistant', or 'enthusiast'. It would be disingenuous to position us as a 'partner' before starting a relationship. Roles and emotions are very important considerations within your process.\n\n\nDeduce the single biggest, best low-hanging fruit in response to the user's challenge or problem they face. You generate clear and concise advice.\n---\nBusinesses Challenge:\n{{ $json.originalPost }}\n---\nAnswer with only one single solution, leaving everything else for later.",
+        "options": {}
+      },
+      "id": "ee6b6c1a-6f21-4f58-be38-083e1fcb0b4b",
+      "name": "Low Hanging Fruit Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        3040,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "12e13885-76ea-4df1-b052-b6a60844cc9f",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2260,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "approved",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "f4b91604-3b4f-48e4-b2e7-d11e78135766",
+              "name": "upvotes",
+              "value": "={{ $json.upvotes }}",
+              "type": "number"
+            },
+            {
+              "id": "c562bd8e-985b-49bf-81ed-4771055b128a",
+              "name": "subredditSize",
+              "value": "={{ $json.subredditSize }}",
+              "type": "number"
+            },
+            {
+              "id": "be174c58-9005-4b73-8faf-de0b111898cb",
+              "name": "originalPost",
+              "value": "={{ $json.originalPost }}",
+              "type": "string"
+            },
+            {
+              "id": "4fd49956-be06-43ff-b11c-cbce7ba8c751",
+              "name": "subreddit",
+              "value": "={{ $json.subreddit }}",
+              "type": "string"
+            },
+            {
+              "id": "fd002690-0d05-4bca-841b-5adfb6b384f9",
+              "name": "date",
+              "value": "={{ $json.date }}",
+              "type": "string"
+            },
+            {
+              "id": "d5a8b684-80a4-4150-b921-a6c917e619c5",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "cae9c151-9768-4119-8db4-ac0c3b2a8894",
+      "name": "Edit Fields4",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2780,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6113a4ca-2263-42f1-b58c-28e29161d1b5",
+              "name": "summary",
+              "value": "={{ $json.response.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "495b1181-3533-480f-a2bd-8cdec5c6e6f4",
+      "name": "Edit Fields5",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3320,
+        -180
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 4,
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "id": "3e9ef0ce-5b7c-4f6d-9707-0fb518c05b12",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3900,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "path": "7f970f2f-1ca1-4bb8-805c-3a67376b2cd3",
+        "formTitle": "Get Leads!",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Keywords",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "881c8315-4cc3-48fe-9ab2-1e7d5bc74fec",
+      "name": "n8n Form Trigger",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.1,
+      "position": [
+        980,
+        320
+      ],
+      "webhookId": "7f970f2f-1ca1-4bb8-805c-3a67376b2cd3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "cd1dab7b-10b7-4f73-9fe8-f307699722a2",
+      "name": "Summarization Chain",
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        2800,
+        -260
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Format Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Post Judge",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Solutions Provider",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Solutions Provider",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Reddit": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Post Data": {
+      "main": [
+        [
+          {
+            "node": "Post Judge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "Solutions Provider",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "Solutions Provider",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Post Judge": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Low Hanging Fruit Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Low Hanging Fruit Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Solutions Provider": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Low Hanging Fruit Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Low Hanging Fruit Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator2": {
+      "ai_tool": [
+        [
+          {
+            "node": "Post Judge",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Low Hanging Fruit Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "n8n Form Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search Reddit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarization Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7e887fdd-8c62-4705-9f2b-77d87cb852cf",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "aa9969d05a58af5ae6ea99a29e57f9c74d40fac048a887d9cd7a17001b3a9e0a"
+  },
+  "id": "FOsqDkSlhXgQDgqV",
+  "tags": []
+}
