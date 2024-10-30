@@ -24,6 +24,8 @@
 5. **Google Sheets Integration**:
    - Appends the curated and processed post data, along with AI-generated suggestions, to a Google Sheet for team reference. Each row includes columns such as the post’s original content, solution ideas, and a summary.
 
+![Screenshot 2024-10-30 at 1 56 27 PM](https://github.com/user-attachments/assets/08b9066f-7a8a-40f8-9b5c-d22011264469)
+
 ## Key AI Nodes and Logic
 
 - **Post Judge and Solutions Provider**:
