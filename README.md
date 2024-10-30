@@ -2,10 +2,7 @@
 
 ## Overview
 
-![00009-65338068](https://github.com/user-attachments/assets/60276590-0b6e-4c57-9ad4-beabd65d4f20)
-
-
-This n8n workflow automates the process of identifying marketing-related needs from Reddit posts. It performs targeted searches on Reddit, analyzes post content for specific business challenges, and then suggests possible solutions. Finally, it compiles all data into a Google Sheet for team reference.
+<img src="https://github.com/user-attachments/assets/60276590-0b6e-4c57-9ad4-beabd65d4f20" style="width: 300px;" align="right" />This n8n workflow automates the process of identifying marketing-related needs from Reddit posts. It performs targeted searches on Reddit, analyzes post content for specific business challenges, and then suggests possible solutions. Finally, it compiles all data into a Google Sheet for team reference.
 
 ### Key Workflow Nodes and Functions
 
