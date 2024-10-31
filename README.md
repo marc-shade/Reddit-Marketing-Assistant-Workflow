@@ -65,3 +65,7 @@ Each entry in the Google Sheet includes:
 - **Reddit API Access** for retrieving post data.
 - **Google Sheets API Credentials** to store data.
 - **Mistral Cloud AI API** for text analysis and recommendation generation.
+
+## Lead Mangement & Reporting
+
+- Use this app to work those leads! https://github.com/marc-shade/Reddit-Lead-Manager
