@@ -29,7 +29,7 @@
 ## Key AI Nodes and Logic
 
 - **Post Judge and Solutions Provider**:
-  - Leverages AI (e.g., OpenAI Mistral Model) to classify posts and generate potential marketing solutions. AI prompts are tailored to identify business challenges and suggest actionable marketing strategies.
+  - Leverages AI to classify posts and generate potential marketing solutions. AI prompts are tailored to identify business challenges and suggest actionable marketing strategies.
 
 - **Low Hanging Fruit Agent**:
   - Provides one actionable recommendation per post, focusing on easily implementable ideas that can offer quick wins for the business.
